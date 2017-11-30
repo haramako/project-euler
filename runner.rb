@@ -5,6 +5,7 @@ require 'optparse'
 
 def run(dir)
   puts "Run at location `#{dir}`"
+  work_times = Hash.new
   files = Dir.glob("#{dir}/euler*.rb").sort
   files.each do |f|
     begin
@@ -15,11 +16,15 @@ def run(dir)
   end
   total = 0
   success = 0
+  total_work_time = 0
   files.each do |f|
     begin
       total += 1
       mo = f.match /(euler(\d+))\.rb/
       num = mo[2].to_i
+      fstat = File.stat(f)
+      work_time = [(fstat.mtime - fstat.birthtime).to_i, 30*60].min
+      total_work_time += work_time
       result = __send__(mo[1])
       ok = if not $answers[num]
              '?'
@@ -32,14 +37,14 @@ def run(dir)
         success += 1
       end
       if $verbose || ok != '.'
-        puts format("%04d     %s %d", num, ok, result)
+        puts format("%04d     %s %3dmin %d", num, ok, work_time / 60, result)
       end
     rescue
       puts format("%04d     X FAILED %s", num, $!)
     end
   end
   all_result = if total == success then 'OK' else 'NG' end
-  puts format("%s %d/%d", all_result, success, total)
+  puts format("%s %d/%d work: %4dmin", all_result, success, total, total_work_time / 60)
 end
 
 $answers = IO.readlines('answers.txt')
@@ -49,7 +54,7 @@ $answers = IO.readlines('answers.txt')
 $answers = Hash[$answers]
 
 op = OptionParser.new('Project Euler Runner')
-op.on('v','--verbose'){|v| $verbose = true }
+op.on('-v','--verbose'){|v| $verbose = true }
 args = op.parse(ARGV)
 
 args = ['.'] if args.empty?
