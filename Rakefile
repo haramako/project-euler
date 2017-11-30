@@ -1,5 +1,5 @@
 task :default do
-  sh 'ruby', 'runner.rb'
+  sh 'ruby', 'runner.rb', '-v'
 end
 
 task :all do
