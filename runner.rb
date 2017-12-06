@@ -60,10 +60,12 @@ args = op.parse(ARGV)
 args = ['.'] if args.empty?
 
 args.each do |dir|
-  pid = fork do
+  if RUBY_PLATFORM =~ /darwin/
+    pid = fork do
+      run(dir)
+    end
+    Process.wait(pid)
+  else
     run(dir)
   end
-  Process.wait(pid)
 end
-
-
