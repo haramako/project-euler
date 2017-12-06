@@ -23,13 +23,16 @@ EOT
 
 def euler011
   nums = EULER_011.split(/\n/).map{|s| s.split(/\s+/).map{|x| x.to_i} }
+  dirs = [[0,1], [1,0], [1,1], [1,-1]]
+  
   r = 0
-  (0..16).each do |x|
-    (0..16).each do |y|
-      n1 = nums[x][y] * nums[x+1][y] * nums[x+2][y] * nums[x+3][y]
-      n2 = nums[x][y] * nums[x][y+1] * nums[x][y+2] * nums[x][y+3]
-      n3 = nums[x][y] * nums[x+1][y+1] * nums[x+2][y+2] * nums[x+3][y+3]
-      r = [r,n1,n2,n3].max
+  (0..19).each do |x|
+    (0..19).each do |y|
+      dirs.each do |dir|
+        dx, dy = dir
+        n = ((nums[x][y] * nums[x+dx][y+dy] * nums[x+dx*2][y+dy*2] * nums[x+dx*3][y+dy*3]) rescue 0)
+        r = [r,n].max
+      end
     end
   end
   r
