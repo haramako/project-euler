@@ -44,3 +44,7 @@ task :update do
   end
 end
 
+desc 'ファイルをアップロードする'
+task :upload do
+  sh 'rsync --iconv=UTF8-MAC,UTF-8 -avz daily_report/ tdadmin@133.242.235.150:/home/tdadmin/dfz/Doc/_site/daily_report/'
+end
