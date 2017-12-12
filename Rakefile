@@ -28,7 +28,7 @@ task :daily_report do
   Dir.chdir 'daily_report' do
     html = ["<html><h1>Project Euler Daily Report</h1><ul>"]
     FileList['20*'].each do |f|
-      html << "<li><a href='./#{date}/index.html'>#{date}</li>"
+      html << "<li><a href='./#{f}/index.html'>#{f}</li>"
     end
     html << "</ul></body></html>"
     IO.write('index.html', html.join("\n"))
