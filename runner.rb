@@ -26,6 +26,10 @@ def run_all
       mo = f.match /(euler(\d+))\.rb/
       num = mo[2].to_i
 
+      if $target
+        next unless $target != num
+      end
+
       result = __send__(mo[1])
 
       ok = if not $answers[num]
@@ -57,5 +61,7 @@ answers_array = IO.readlines('answers.txt')
           .reject(&:nil?)
           .map{|mo| [mo[1].to_i, mo[2].to_f] }
 $answers = Hash[answers_array]
+
+$target = ARGV[0] && ARGV[0].to_i
 
 run_all
